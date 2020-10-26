@@ -216,6 +216,16 @@ function VulnAD-DisableSMBSigning {
     Set-SmbClientConfiguration -RequireSecuritySignature 0 -EnableSecuritySignature 0 -Confirm -Force
 }
 
+
+# additions for the Detection Lab setup, gives WEF unconstrained delegation for the DC and constrained delegation of the WEF to the win10 box.
+function s0lenya_edit_add_unconstrained_delegation{
+    Get-ADComputer -Identity WEF | Set-ADAccountControl ‑TrustedForDelegation $true
+}
+
+function s0lenya_edit_add_constrained_delegation{
+    Set-ADComputer -Identity win10 -Add @{'msDS-AllowedToDelegateTo'=@('HOST/WEF','WSMAN/WEF.windowmain.local')}
+}
+
 function Invoke-VulnAD {
     Param(
         [int]$UsersLimit = 100,
@@ -251,4 +261,8 @@ function Invoke-VulnAD {
     Write-Good "DCSync Done"
     VulnAD-DisableSMBSigning
     Write-Good "SMB Signing Disabled"
+    s0lenya_edit_add_unconstrained_delegation
+    Write-Good "Constrained Delegation Added"
+    s0lenya_edit_add_unconstrained_delegation
+    Write-Good "UnConstrained Delegation Added"
 }
