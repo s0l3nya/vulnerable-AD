@@ -223,7 +223,7 @@ function s0lenya_edit_add_unconstrained_delegation{
 }
 
 function s0lenya_edit_add_constrained_delegation{
-    Set-ADComputer -Identity win10 -Add @{'msDS-AllowedToDelegateTo'=@('HOST/WEF','WSMAN/WEF.windowmain.local')}
+    Set-ADComputer -Identity win10 -Add @{'msDS-AllowedToDelegateTo'=@('HOST/WEF','WSMAN/WEF.windomain.local')}
 }
 
 function Invoke-VulnAD {
@@ -263,6 +263,6 @@ function Invoke-VulnAD {
     Write-Good "SMB Signing Disabled"
     s0lenya_edit_add_unconstrained_delegation
     Write-Good "Constrained Delegation Added"
-    s0lenya_edit_add_unconstrained_delegation
+    s0lenya_edit_add_constrained_delegation
     Write-Good "UnConstrained Delegation Added"
 }
